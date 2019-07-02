@@ -8,6 +8,6 @@ data class Vehicle(
     @SerializedName("licensePlate") val licensePlate: String,
     @SerializedName("brand") val brand: String,
     @SerializedName("model") val model: String,
-    @SerializedName("nickname") val nickname: String,
+    @SerializedName("nickname") val nickname: String?,
     @SerializedName("lastPosition") val location: Location
 ) : Serializable
