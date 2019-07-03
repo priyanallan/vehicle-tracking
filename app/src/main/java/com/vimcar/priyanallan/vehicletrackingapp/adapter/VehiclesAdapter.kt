@@ -7,7 +7,10 @@ import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import kotlinx.android.synthetic.main.list_item_vehicle.view.*
 
-class VehiclesAdapter(val vehicles: List<Vehicle>) :
+class VehiclesAdapter(
+    val vehicles: List<Vehicle>,
+    val onVehicleClickListener: VehicleOnClickListener
+) :
     androidx.recyclerview.widget.RecyclerView.Adapter<VehiclesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
@@ -29,8 +32,23 @@ class VehiclesAdapter(val vehicles: List<Vehicle>) :
                 carLicense.text = licensePlateNumber
             }
         }
+        holder.bind(vehicles[position], onVehicleClickListener)
     }
 
 
-    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+
+        fun bind(selectedVehicle: Vehicle, listener: VehicleOnClickListener) {
+
+            itemView.setOnClickListener {
+                listener.onVehicleClickListener()
+            }
+        }
+    }
+}
+
+interface VehicleOnClickListener {
+
+    fun onVehicleClickListener()
 }
