@@ -1,18 +1,19 @@
 package com.vimcar.priyanallan.vehicletrackingapp.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import android.util.Log
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.remote.RetrofitService
+import org.koin.core.KoinComponent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class VehiclesRepository {
+class VehiclesRepository : KoinComponent {
 
     private val TAG = VehiclesRepository::class.java.simpleName
 

@@ -1,15 +1,14 @@
 package com.vimcar.priyanallan.vehicletrackingapp.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.R
+import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import kotlinx.android.synthetic.main.list_item_vehicle.view.*
 
 class VehiclesAdapter(val vehicles: List<Vehicle>) :
-    RecyclerView.Adapter<VehiclesAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<VehiclesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val layout =
@@ -33,5 +32,5 @@ class VehiclesAdapter(val vehicles: List<Vehicle>) :
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }

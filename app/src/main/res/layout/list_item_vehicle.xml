@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView android:id="@+id/product_item"
+<androidx.cardview.widget.CardView android:id="@+id/product_item"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="4dp"
@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -54,5 +54,5 @@
             app:layout_constraintTop_toBottomOf="@id/carModel"
             app:layout_constraintLeft_toLeftOf="@id/carModel"/>
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
