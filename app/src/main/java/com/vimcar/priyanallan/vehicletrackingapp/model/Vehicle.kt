@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class Vehicle(
     @SerializedName("id") val id: Int,
-    @SerializedName("licensePlate") val licensePlate: String,
+    @SerializedName("licensePlate") val licensePlateNumber: String,
     @SerializedName("brand") val brand: String,
     @SerializedName("model") val model: String,
     @SerializedName("nickname") val nickname: String?,

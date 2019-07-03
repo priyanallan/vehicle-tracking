@@ -24,8 +24,11 @@ class VehiclesAdapter(val vehicles: List<Vehicle>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.itemView.apply {
-            carBrand.text = vehicles[position].brand
-            carModel.text = vehicles[position].model
+            vehicles[position].apply {
+                carBrand.text = brand
+                carModel.text = model
+                carLicense.text = licensePlateNumber
+            }
         }
     }
 

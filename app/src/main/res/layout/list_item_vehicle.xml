@@ -41,11 +41,18 @@
             tools:text="i10"
             android:textStyle="bold"
             android:textSize="24sp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@id/carBrand"
-            app:layout_constraintLeft_toRightOf="@id/carIcon"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintLeft_toLeftOf="@id/carBrand"/>
 
+        <TextView
+            android:id="@+id/carLicense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="A B 110"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/carModel"
+            app:layout_constraintLeft_toLeftOf="@id/carModel"/>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

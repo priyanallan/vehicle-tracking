@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.vimcar.priyanallan.vehicletrackingapp.adapter.VehiclesAdapter
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
+import com.vimcar.priyanallan.vehicletrackingapp.utils.VehicleComparator
 import com.vimcar.priyanallan.vehicletrackingapp.viewmodel.VehiclesViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -25,7 +26,7 @@ class VehiclesActivity : AppCompatActivity() {
         vehiclesViewModel.vehiclesList.observe(this,
             Observer<List<Vehicle>> { listOfVehicles ->
                 listOfVehicles?.let { vehicles ->
-                    vehicles_recyclerview.adapter = VehiclesAdapter(vehicles)
+                    vehicles_recyclerview.adapter = VehiclesAdapter(vehicles.sortedWith(VehicleComparator()))
                 }
             })
     }
