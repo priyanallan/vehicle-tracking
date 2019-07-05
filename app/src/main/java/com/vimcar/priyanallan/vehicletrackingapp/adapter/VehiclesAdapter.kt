@@ -27,9 +27,9 @@ class VehiclesAdapter(
 
         holder.itemView.apply {
             vehicles[position].apply {
-                carBrand.text = brand
-                carModel.text = model
-                carLicense.text = licensePlateNumber
+                vehicleBrand.text = brand
+                vehicleModel.text = model
+                vehicleLicense.text = licensePlateNumber
             }
         }
         holder.bind(vehicles[position], onVehicleClickListener)

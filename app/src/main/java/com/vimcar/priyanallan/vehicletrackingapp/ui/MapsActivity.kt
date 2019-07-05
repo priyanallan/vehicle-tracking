@@ -2,6 +2,7 @@ package com.vimcar.priyanallan.vehicletrackingapp.ui
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,6 +15,7 @@ import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.VEHICLE_LOCATION
 import com.vimcar.priyanallan.vehicletrackingapp.utils.UtilFunctions
+import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -27,6 +29,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val bundle = intent.extras
         vehicle = bundle?.getSerializable(VEHICLE_LOCATION) as Vehicle
+
+        //On Show vehicle Info button clicked
+        showVehicleInfoButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                vehicleName.visibility = View.VISIBLE
+                vehicleLicensePlateNr.visibility = View.VISIBLE
+                vehicleName.text = getString(R.string.brand_model, vehicle.brand, vehicle.model)
+                vehicleLicensePlateNr.text = vehicle.licensePlateNumber
+            } else {
+                vehicleName.visibility = View.GONE
+                vehicleLicensePlateNr.visibility = View.GONE
+            }
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager

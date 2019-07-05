@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">VehicleTrackingApp</string>
     <string name="title_activity_maps">VehicleLocationMap</string>
+    <string name="show_vehicle_info">Show Vehicle Info</string>
+    <string name="hide_vehicle_info">Hide Vehicle Info</string>
+    <string name="brand_model">%s %s</string>
 </resources>

@@ -31,7 +31,6 @@
                 android:textSize="14sp"
                 android:textDirection="firstStrongRtl"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:backgroundTint="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
