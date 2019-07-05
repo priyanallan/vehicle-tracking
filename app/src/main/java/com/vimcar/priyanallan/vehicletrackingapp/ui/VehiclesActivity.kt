@@ -1,13 +1,14 @@
 package com.vimcar.priyanallan.vehicletrackingapp.ui
 
 import android.content.Intent
-import androidx.lifecycle.Observer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.adapter.VehicleOnClickListener
 import com.vimcar.priyanallan.vehicletrackingapp.adapter.VehiclesAdapter
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
+import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.VEHICLE_LOCATION
 import com.vimcar.priyanallan.vehicletrackingapp.utils.VehicleComparator
 import com.vimcar.priyanallan.vehicletrackingapp.viewmodel.VehiclesViewModel
 import kotlinx.android.synthetic.main.activity_home.*
@@ -35,8 +36,9 @@ class VehiclesActivity : AppCompatActivity(), VehicleOnClickListener {
             })
     }
 
-    override fun onVehicleClickListener() {
+    override fun onVehicleClickListener(selectedVehicle: Vehicle) {
         val intent = Intent(this, MapsActivity::class.java)
+        intent.putExtra(VEHICLE_LOCATION, selectedVehicle)
         startActivity(intent)
     }
 }

@@ -42,7 +42,7 @@ class VehiclesAdapter(
         fun bind(selectedVehicle: Vehicle, listener: VehicleOnClickListener) {
 
             itemView.setOnClickListener {
-                listener.onVehicleClickListener()
+                listener.onVehicleClickListener(selectedVehicle)
             }
         }
     }
@@ -50,5 +50,5 @@ class VehiclesAdapter(
 
 interface VehicleOnClickListener {
 
-    fun onVehicleClickListener()
+    fun onVehicleClickListener(selectedVehicle: Vehicle)
 }

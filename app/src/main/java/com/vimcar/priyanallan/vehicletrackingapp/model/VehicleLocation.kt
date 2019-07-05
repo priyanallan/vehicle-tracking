@@ -3,7 +3,7 @@ package com.vimcar.priyanallan.vehicletrackingapp.model
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Location(
+data class VehicleLocation(
     @SerializedName("lat")
     val latitude: Double,
     @SerializedName("lng")
