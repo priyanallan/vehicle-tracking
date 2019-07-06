@@ -1,9 +1,15 @@
 package com.vimcar.priyanallan.vehicletrackingapp.ui
 
-import android.graphics.BitmapFactory
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,15 +28,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var vehicle: Vehicle
     private val ZOOM_LEVEL = 15.0f
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val TAG = MapsActivity::class.java.simpleName
+    private var lastLocation: Location? = null
+    private var isCurrentDeviceLocation = false
+    private var isFirstMapOpen = true
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         val bundle = intent.extras
         vehicle = bundle?.getSerializable(VEHICLE_LOCATION) as Vehicle
 
-        //On Show vehicle Info button clicked
+        //On Show vehicle Info button click listener
         showVehicleInfoButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 vehicleName.visibility = View.VISIBLE
@@ -41,6 +58,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 vehicleName.visibility = View.GONE
                 vehicleLicensePlateNr.visibility = View.GONE
             }
+        }
+
+        //On Return to Device Location button click listener
+        goToVehicleLocation.setOnClickListener {
+
+            displayVehicleOnMap()
+            goToVehicleLocation.visibility = View.GONE
+            isCurrentDeviceLocation = false
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -62,20 +87,100 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Display location of vehicle
+        displayVehicleOnMap()
+
+        //Request permissions for current device
+        requestDeviceLocationPermissions()
+
+        //On show current location button listener
+        mMap.setOnMyLocationButtonClickListener(object : GoogleMap.OnMyLocationButtonClickListener {
+            override fun onMyLocationButtonClick(): Boolean {
+
+                if (!isCurrentDeviceLocation) {
+                    lastLocation?.apply {
+                        mMap.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(latitude, longitude),
+                                ZOOM_LEVEL
+                            )
+                        )
+                        goToVehicleLocation.visibility = View.VISIBLE
+                        isCurrentDeviceLocation = true
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation()
+            }
+        } else {
+            Log.e(TAG, "Permission Denied, device location cannot be shown")
+        }
+    }
+
+    private fun requestDeviceLocationPermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            } else {
+                getLastLocation()
+            }
+        }
+    }
+
+    private fun displayVehicleOnMap() {
         vehicle.apply {
             val locationOfVehicle = LatLng(location.latitude, location.longitude)
-            mMap.addMarker(
-                MarkerOptions().position(locationOfVehicle).title(nickname).icon(
-                    BitmapDescriptorFactory.fromBitmap(
-                        UtilFunctions.getBitmapFromVectorDrawable(
-                            this@MapsActivity,
-                            R.drawable.icon_car
+            //Don't initialize marker on click of return button to vehicle location
+            if (isFirstMapOpen) {
+                mMap.addMarker(
+                    MarkerOptions().position(locationOfVehicle).title(nickname).icon(
+                        BitmapDescriptorFactory.fromBitmap(
+                            UtilFunctions.getBitmapFromVectorDrawable(
+                                this@MapsActivity,
+                                R.drawable.icon_car
+                            )
                         )
                     )
                 )
-            )
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(locationOfVehicle))
+            }
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationOfVehicle, ZOOM_LEVEL))
+            isFirstMapOpen = false
+        }
+    }
+
+    private fun getLastLocation() {
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = true
+
+        fusedLocationClient.lastLocation.addOnCompleteListener(
+            this
+        ) { task ->
+            if (task.isSuccessful) {
+                lastLocation = task.result
+                Log.d(TAG, "Current location is $lastLocation")
+            }
         }
     }
 }

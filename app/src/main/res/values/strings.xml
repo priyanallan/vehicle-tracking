@@ -4,4 +4,5 @@
     <string name="show_vehicle_info">Show Vehicle Info</string>
     <string name="hide_vehicle_info">Hide Vehicle Info</string>
     <string name="brand_model">%s %s</string>
+    <string name="return_to_vehicle_location">Return to Vehicle Location</string>
 </resources>
