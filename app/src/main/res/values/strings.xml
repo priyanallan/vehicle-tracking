@@ -5,4 +5,6 @@
     <string name="hide_vehicle_info">Hide Vehicle Info</string>
     <string name="brand_model">%s %s</string>
     <string name="return_to_vehicle_location">Return to Vehicle Location</string>
+    <string name="retry_network_button">OK</string>
+    <string name="network_dialog_error_message">Check Internet Connection and retry</string>
 </resources>

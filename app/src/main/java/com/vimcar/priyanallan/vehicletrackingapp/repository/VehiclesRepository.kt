@@ -1,11 +1,9 @@
 package com.vimcar.priyanallan.vehicletrackingapp.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import android.util.Log
-import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.remote.RetrofitService
+import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants
 import org.koin.core.KoinComponent
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,9 +15,7 @@ class VehiclesRepository : KoinComponent {
 
     private val TAG = VehiclesRepository::class.java.simpleName
 
-    fun getVehicles(): LiveData<List<Vehicle>>{
-
-        val vehiclesObservable: MutableLiveData<List<Vehicle>> = MutableLiveData()
+    fun getVehicles(callback: NetworkStatusCallback) {
 
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
@@ -30,8 +26,7 @@ class VehiclesRepository : KoinComponent {
 
         service.getVehicles().enqueue(object : Callback<List<Vehicle>> {
             override fun onFailure(call: Call<List<Vehicle>>, t: Throwable) {
-                //TODO: Add error handling
-                Log.e("VehiclesActivity", "Error in retrofit ${t.localizedMessage}")
+                callback.onNetworkStatus(t.localizedMessage)
             }
 
             override fun onResponse(
@@ -39,12 +34,16 @@ class VehiclesRepository : KoinComponent {
                 response: Response<List<Vehicle>>
             ) {
                 if (response.isSuccessful) {
-                    vehiclesObservable.postValue(response.body())
+                    callback.onDataLoading(response.body())
                 } else {
                     Log.e(TAG, "Error getting response!")
                 }
             }
         })
-        return vehiclesObservable
+    }
+
+    interface NetworkStatusCallback {
+        fun onDataLoading(content: List<Vehicle>?)
+        fun onNetworkStatus(networkState: String)
     }
 }

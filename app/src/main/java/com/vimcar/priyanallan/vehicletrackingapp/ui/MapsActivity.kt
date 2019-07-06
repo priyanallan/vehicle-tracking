@@ -24,7 +24,7 @@ import com.google.android.gms.tasks.Task
 import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.VEHICLE_LOCATION
-import com.vimcar.priyanallan.vehicletrackingapp.utils.UtilFunctions
+import com.vimcar.priyanallan.vehicletrackingapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -96,14 +96,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         requestDeviceLocationPermissions()
 
         //On show current location button listener
-        mMap.setOnMyLocationButtonClickListener(object : GoogleMap.OnMyLocationButtonClickListener {
-            override fun onMyLocationButtonClick(): Boolean {
-
-                //Request permissions for current device
-                createLocationRequest()
-                return true
-            }
-        })
+        mMap.setOnMyLocationButtonClickListener {
+            //Request permissions for current device
+            createLocationRequest()
+            true
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -189,7 +186,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addMarker(
                     MarkerOptions().position(locationOfVehicle).title(nickname).icon(
                         BitmapDescriptorFactory.fromBitmap(
-                            UtilFunctions.getBitmapFromVectorDrawable(
+                            Utils.getBitmapFromVectorDrawable(
                                 this@MapsActivity,
                                 R.drawable.icon_car
                             )

@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 
-class UtilFunctions {
+class Utils {
 
     companion object {
 
