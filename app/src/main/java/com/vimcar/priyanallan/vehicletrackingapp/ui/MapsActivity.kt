@@ -1,5 +1,8 @@
 package com.vimcar.priyanallan.vehicletrackingapp.ui
 
+import android.app.Activity
+import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -8,8 +11,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
 import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.VEHICLE_LOCATION
@@ -36,6 +40,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        private const val REQUEST_CHECK_SETTINGS = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,28 +93,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Display location of vehicle
         displayVehicleOnMap()
-
-        //Request permissions for current device
         requestDeviceLocationPermissions()
 
         //On show current location button listener
         mMap.setOnMyLocationButtonClickListener(object : GoogleMap.OnMyLocationButtonClickListener {
             override fun onMyLocationButtonClick(): Boolean {
 
-                if (!isCurrentDeviceLocation) {
-                    lastLocation?.apply {
-                        mMap.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(latitude, longitude),
-                                ZOOM_LEVEL
-                            )
-                        )
-                        goToVehicleLocation.visibility = View.VISIBLE
-                        isCurrentDeviceLocation = true
-                        return true
-                    }
-                }
-                return false
+                //Request permissions for current device
+                createLocationRequest()
+                return true
             }
         })
     }
@@ -123,10 +115,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation()
+                mMap.isMyLocationEnabled = true
+                mMap.uiSettings.isMyLocationButtonEnabled = true
             }
         } else {
             Log.e(TAG, "Permission Denied, device location cannot be shown")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == Activity.RESULT_OK) {
+                goToCurrentDeviceLocation()
+            } else {
+                // Map location does not change
+            }
         }
     }
 
@@ -143,9 +147,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                     LOCATION_PERMISSION_REQUEST_CODE
                 )
-            } else {
-                getLastLocation()
             }
+        }
+    }
+
+    private fun createLocationRequest() {
+        val locationRequest = LocationRequest.create()?.apply {
+            interval = 10000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest!!)
+
+        val client: SettingsClient = LocationServices.getSettingsClient(this)
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+
+                try {
+                    //Ask for location settings
+                    exception.startResolutionForResult(this@MapsActivity, REQUEST_CHECK_SETTINGS)
+                } catch (sendEx: IntentSender.SendIntentException) {
+
+                }
+            }
+        }
+
+        task.addOnCompleteListener {
+            goToCurrentDeviceLocation()
         }
     }
 
@@ -170,16 +202,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun getLastLocation() {
-        mMap.isMyLocationEnabled = true
-        mMap.uiSettings.isMyLocationButtonEnabled = true
+    private fun goToCurrentDeviceLocation() {
 
         fusedLocationClient.lastLocation.addOnCompleteListener(
             this
         ) { task ->
             if (task.isSuccessful) {
                 lastLocation = task.result
-                Log.d(TAG, "Current location is $lastLocation")
+                if (!isCurrentDeviceLocation) {
+                    lastLocation?.apply {
+                        mMap.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(latitude, longitude),
+                                ZOOM_LEVEL
+                            )
+                        )
+
+                        goToVehicleLocation.visibility = View.VISIBLE
+                        isCurrentDeviceLocation = true
+                    }
+                }
+            } else {
+                Log.e(TAG, "Error getting current device location")
             }
         }
     }
