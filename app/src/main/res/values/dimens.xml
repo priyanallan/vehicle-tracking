@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="return_to_vehicle_location_button_size">56dp</dimen>
+    <dimen name="one_unit">8dp</dimen>
+</resources>

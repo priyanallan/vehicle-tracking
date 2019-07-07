@@ -3,6 +3,7 @@ package com.vimcar.priyanallan.vehicletrackingapp.ui
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -24,11 +25,15 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.vimcar.priyanallan.vehicletrackingapp.R
 import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
+import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants
+import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.KEY_LOCATION_BUTTON_ENABLE
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Constants.Companion.VEHICLE_LOCATION
 import com.vimcar.priyanallan.vehicletrackingapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_maps.*
+import org.koin.android.ext.android.inject
+import org.koin.core.KoinComponent
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, KoinComponent {
 
     private lateinit var mMap: GoogleMap
     private lateinit var vehicle: Vehicle
@@ -38,6 +43,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var lastLocation: Location? = null
     private var isCurrentDeviceLocation = false
     private var isFirstMapOpen = true
+
+    private val sharedPrefs by inject<SharedPreferences>()
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -102,6 +109,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             createLocationRequest()
             true
         }
+
+        //Check if Location permissions are already granted
+        if (sharedPrefs.getBoolean(KEY_LOCATION_BUTTON_ENABLE, false)) {
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled = true
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -115,6 +128,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mMap.isMyLocationEnabled = true
                 mMap.uiSettings.isMyLocationButtonEnabled = true
+                sharedPrefs.edit().putBoolean(KEY_LOCATION_BUTTON_ENABLE, true).apply()
             }
         } else {
             Toast.makeText(
