@@ -45,7 +45,7 @@ class VehiclesActivity : AppCompatActivity(), VehicleOnClickListener {
                     showNetworkErrorDialog(this)
                 }
             })
-        getVehiclesData()
+        fetchVehiclesData()
     }
 
     override fun onVehicleClickListener(selectedVehicle: Vehicle) {
@@ -62,11 +62,12 @@ class VehiclesActivity : AppCompatActivity(), VehicleOnClickListener {
 
             alertDialogBuilder
                 .setMessage(getString(R.string.network_dialog_error_message))
+                .setIcon(android.R.drawable.stat_notify_error)
                 .setCancelable(false)
                 .setPositiveButton(
                     getString(R.string.retry_network_button)
                 ) { dialog, _ ->
-                    getVehiclesData()
+                    fetchVehiclesData()
                     dialog.dismiss()
                 }
             val alertDialog = alertDialogBuilder.create()
@@ -75,7 +76,7 @@ class VehiclesActivity : AppCompatActivity(), VehicleOnClickListener {
 
     }
 
-    private fun getVehiclesData() {
+    private fun fetchVehiclesData() {
         vehiclesViewModel.getVehicles()
     }
 }

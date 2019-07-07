@@ -14,11 +14,11 @@ class VehiclesViewModel : ViewModel(), KoinComponent, VehiclesRepository.Network
     var vehiclesList: MutableLiveData<List<Vehicle>> = MutableLiveData()
     var onDataLoadingStatus: MutableLiveData<String> = MutableLiveData()
 
-    override fun onDataLoading(vehicles: List<Vehicle>?) {
+    override fun onDataLoadingSuccess(vehicles: List<Vehicle>?) {
         vehiclesList.postValue(vehicles)
     }
 
-    override fun onNetworkStatus(networkState: String) {
+    override fun onDataLoadingFailure(networkState: String) {
         onDataLoadingStatus.value = networkState
     }
 

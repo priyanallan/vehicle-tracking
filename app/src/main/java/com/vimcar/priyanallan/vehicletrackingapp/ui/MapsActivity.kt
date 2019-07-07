@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
@@ -116,7 +117,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.uiSettings.isMyLocationButtonEnabled = true
             }
         } else {
-            Log.e(TAG, "Permission Denied, device location cannot be shown")
+            Toast.makeText(
+                this,
+                getString(R.string.location_permission_denied_message),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -181,7 +186,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun displayVehicleOnMap() {
         vehicle.apply {
             val locationOfVehicle = LatLng(location.latitude, location.longitude)
-            //Don't initialize marker on click of return button to vehicle location
+
+            //Don't initialize marker every time on click of return button to vehicle location
             if (isFirstMapOpen) {
                 mMap.addMarker(
                     MarkerOptions().position(locationOfVehicle).title(nickname).icon(

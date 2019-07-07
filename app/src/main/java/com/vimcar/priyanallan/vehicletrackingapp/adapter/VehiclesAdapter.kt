@@ -8,12 +8,12 @@ import com.vimcar.priyanallan.vehicletrackingapp.model.Vehicle
 import kotlinx.android.synthetic.main.list_item_vehicle.view.*
 
 class VehiclesAdapter(
-    val vehicles: List<Vehicle>,
-    val onVehicleClickListener: VehicleOnClickListener
+    private val vehicles: List<Vehicle>,
+    private val onVehicleClickListener: VehicleOnClickListener
 ) :
     androidx.recyclerview.widget.RecyclerView.Adapter<VehiclesAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layout =
             LayoutInflater.from(parent.context).inflate(R.layout.list_item_vehicle, parent, false)
         return ViewHolder(layout)

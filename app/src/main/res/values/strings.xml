@@ -7,4 +7,5 @@
     <string name="return_to_vehicle_location">Return to Vehicle Location</string>
     <string name="retry_network_button">OK</string>
     <string name="network_dialog_error_message">Check Internet Connection and retry</string>
+    <string name="location_permission_denied_message"><![CDATA[Location Permission denied. Please go to Settings -> Apps & Notifications -> App Info -> Permissions to turn ON]]></string>
 </resources>

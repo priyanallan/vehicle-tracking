@@ -14,19 +14,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 class VehiclesRepository : KoinComponent {
 
     private val TAG = VehiclesRepository::class.java.simpleName
+    private var retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(Constants.VEHICLES_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private var retrofitService: RetrofitService
+
+    init {
+        retrofitService = retrofit.create(RetrofitService::class.java)
+
+    }
 
     fun getVehicles(callback: NetworkStatusCallback) {
 
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(RetrofitService::class.java)
-
-        service.getVehicles().enqueue(object : Callback<List<Vehicle>> {
+        retrofitService.getVehicles().enqueue(object : Callback<List<Vehicle>> {
             override fun onFailure(call: Call<List<Vehicle>>, t: Throwable) {
-                callback.onNetworkStatus(t.localizedMessage)
+                callback.onDataLoadingFailure(t.localizedMessage)
             }
 
             override fun onResponse(
@@ -34,7 +37,7 @@ class VehiclesRepository : KoinComponent {
                 response: Response<List<Vehicle>>
             ) {
                 if (response.isSuccessful) {
-                    callback.onDataLoading(response.body())
+                    callback.onDataLoadingSuccess(response.body())
                 } else {
                     Log.e(TAG, "Error getting response!")
                 }
@@ -43,7 +46,7 @@ class VehiclesRepository : KoinComponent {
     }
 
     interface NetworkStatusCallback {
-        fun onDataLoading(content: List<Vehicle>?)
-        fun onNetworkStatus(networkState: String)
+        fun onDataLoadingSuccess(vehiclesList: List<Vehicle>?)
+        fun onDataLoadingFailure(networkState: String)
     }
 }
