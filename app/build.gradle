@@ -9,7 +9,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.vimcar.priyanallan.vehicletrackingapp"
+        applicationId "com.android.priyanallan.com.priyanallan.com.priyanallan.vehicletrackingapp"
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 1

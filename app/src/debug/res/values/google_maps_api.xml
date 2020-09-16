@@ -4,7 +4,7 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=1B:69:84:83:05:72:F3:B7:A4:18:E2:5D:52:9F:04:32:46:A0:2B:1A%3Bcom.vimcar.priyanallan.vehicletrackingapp.ui
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=1B:69:84:83:05:72:F3:B7:A4:18:E2:5D:52:9F:04:32:46:A0:2B:1A%3Bcom.android.priyanallan.vehicletrackingapp.ui
 
     You can also add your credentials to an existing key, using these values:
 
@@ -20,5 +20,5 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">"AIzaSyAPyfU0-6eqmmiSCwPiiCKZyfaL-cZ8wn4"</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_API_KEY</string>
 </resources>
